@@ -3,13 +3,15 @@ import {
   ArrowRight,
   BrainCircuit,
   CheckCircle2,
+  Clock3,
   GitBranch,
+  LockKeyhole,
   ShieldCheck,
   Sparkles,
   Video
 } from "lucide-react";
 import { ProfilePhoto } from "@/components/profile-photo";
-import { SiteHeader } from "@/components/site-header";
+import { PublicHeader } from "@/components/public-header";
 import { domains, expertCollections, experts, successStories } from "@/lib/demo-data";
 
 const steps = [
@@ -33,7 +35,7 @@ export default function HomePage() {
 
   return (
     <>
-      <SiteHeader />
+      <PublicHeader />
       <main>
         <section className="bg-primary text-white">
           <div className="mx-auto grid min-h-[620px] max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr]">
@@ -65,17 +67,17 @@ export default function HomePage() {
               </div>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
-                  href="/missions/new"
+                  href="/auth/register?role=client"
                   className="focus-ring inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-white hover:bg-blue-700"
                 >
-                  Trouver un expert
+                  Creer mon compte
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
-                  href="/auth/register?role=expert"
+                  href="/auth/login"
                   className="focus-ring rounded-full border border-white/25 px-6 py-3 font-semibold text-white hover:bg-white/10"
                 >
-                  Devenir expert
+                  Se connecter
                 </Link>
               </div>
             </div>
@@ -108,12 +110,36 @@ export default function HomePage() {
                     Qui travaille sur quoi, quand le livrable arrive, et pourquoi chaque expert a ete choisi.
                   </p>
                 </div>
+                <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-lg bg-blue-50 p-3">
+                    <p className="text-xl font-bold text-primary">36</p>
+                    <p className="text-xs font-semibold text-slate-600">experts demo</p>
+                  </div>
+                  <div className="rounded-lg bg-emerald-50 p-3">
+                    <p className="text-xl font-bold text-primary">3</p>
+                    <p className="text-xs font-semibold text-slate-600">profils</p>
+                  </div>
+                  <div className="rounded-lg bg-amber-50 p-3">
+                    <p className="text-xl font-bold text-primary">IA</p>
+                    <p className="text-xs font-semibold text-slate-600">expliquee</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+        <section id="concept" className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+          <div className="mb-8 max-w-3xl">
+            <p className="font-semibold text-accent">Avant de demander conseil</p>
+            <h2 className="mt-2 font-display text-3xl font-bold text-primary">
+              Une porte d'entree claire pour les clients, les experts et les admins.
+            </h2>
+            <p className="mt-3 leading-7 text-slate-600">
+              SOS Expert n'est pas juste une liste de profils. La plateforme guide la demande, explique les choix de
+              l'IA, securise les dossiers sensibles et garde chaque role dans son espace.
+            </p>
+          </div>
           <div className="grid gap-5 md:grid-cols-3">
             {steps.map((step, index) => (
               <article key={step.title} className="rounded-lg border border-border bg-white p-6 shadow-card">
@@ -156,7 +182,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+        <section id="confiance" className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div>
               <p className="font-semibold text-accent">Avantage concurrentiel</p>
@@ -166,8 +192,8 @@ export default function HomePage() {
                 resultats, des equipes pretes et des signaux de confiance visibles.
               </p>
             </div>
-            <Link href="/network" className="rounded-full bg-primary px-5 py-3 font-semibold text-white">
-              Voir le reseau
+            <Link href="/auth/login?next=/network" className="rounded-full bg-primary px-5 py-3 font-semibold text-white">
+              Voir le reseau apres connexion
             </Link>
           </div>
 
@@ -225,7 +251,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+        <section id="domaines" className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
           <div className="flex items-end justify-between gap-6">
             <div>
               <h2 className="font-display text-3xl font-bold text-primary">Domaines couverts</h2>
@@ -239,6 +265,35 @@ export default function HomePage() {
                 {domain}
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className="bg-primary text-white">
+          <div className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+            <div>
+              <p className="font-semibold text-blue-100">Espace protege</p>
+              <h2 className="mt-2 font-display text-3xl font-bold">Connectez-vous pour entrer dans la plateforme.</h2>
+              <p className="mt-3 max-w-2xl leading-7 text-slate-200">
+                Le compte donne acces aux dashboards, aux missions, aux messages, aux revenus experts et a
+                l'administration. La vitrine reste publique, le travail se fait dans l'espace connecte.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Link
+                href="/auth/login"
+                className="focus-ring flex items-center gap-3 rounded-lg bg-white px-5 py-4 font-semibold text-primary"
+              >
+                <LockKeyhole className="h-5 w-5 text-accent" />
+                Connexion par mot de passe
+              </Link>
+              <Link
+                href="/auth/register"
+                className="focus-ring flex items-center gap-3 rounded-lg border border-white/20 px-5 py-4 font-semibold text-white hover:bg-white/10"
+              >
+                <Clock3 className="h-5 w-5 text-blue-100" />
+                Creer un compte demo
+              </Link>
+            </div>
           </div>
         </section>
       </main>
