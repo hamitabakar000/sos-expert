@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { BadgeCheck, CalendarClock, Languages, MapPin, MessageSquare, Star, WalletCards } from "lucide-react";
 import { ProfilePhoto } from "@/components/profile-photo";
+import { ExpertReviews } from "@/components/expert-reviews";
 import { SiteHeader } from "@/components/site-header";
-import { experts, reviews } from "@/lib/demo-data";
+import { getCurrentUser } from "@/lib/auth";
+import { consultations, experts, reviews } from "@/lib/demo-data";
 import { formatMad } from "@/lib/utils";
 
 type ExpertProfilePageProps = {
@@ -14,6 +16,7 @@ type ExpertProfilePageProps = {
 export default function ExpertProfilePage({ params }: ExpertProfilePageProps) {
   const expert = experts.find((item) => item.id === params.id) ?? experts[0];
   const expertReviews = reviews.filter((review) => review.expertId === expert.id);
+  const currentUser = getCurrentUser();
 
   return (
     <>
@@ -114,17 +117,13 @@ export default function ExpertProfilePage({ params }: ExpertProfilePageProps) {
               </div>
             </article>
 
-            <article className="rounded-lg border border-border bg-white p-6 shadow-card">
-              <h2 className="font-display text-2xl font-bold text-primary">Avis clients</h2>
-              <div className="mt-4 space-y-3">
-                {(expertReviews.length ? expertReviews : reviews.slice(0, 2)).map((review) => (
-                  <div key={review.id} className="rounded-lg bg-slate-50 p-4">
-                    <p className="font-semibold text-primary">{review.rating}/5</p>
-                    <p className="mt-1 text-sm leading-6 text-slate-600">{review.comment}</p>
-                  </div>
-                ))}
-              </div>
-            </article>
+            <ExpertReviews
+              expert={expert}
+              reviews={expertReviews}
+              consultations={consultations}
+              currentUserId={currentUser.id}
+              currentUserRole={currentUser.role}
+            />
           </section>
         </section>
       </main>

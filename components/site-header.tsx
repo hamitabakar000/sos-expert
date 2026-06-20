@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { signOut } from "@/app/auth/actions";
+import { BrandLogo } from "@/components/brand-logo";
 import { ProfilePhoto } from "@/components/profile-photo";
 import { ThemeControls } from "@/components/theme-controls";
 import { getCurrentUser } from "@/lib/auth";
@@ -50,9 +51,8 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
-        <Link href="/" className="flex items-center gap-2 font-display text-xl font-bold text-primary">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-white">SX</span>
-          SOS Expert
+        <Link href="/" className="focus-ring rounded-md" aria-label="Accueil SOS Expert">
+          <BrandLogo priority />
         </Link>
         <nav className="hidden items-center gap-1 lg:flex">
           {navItems.map((item) => (

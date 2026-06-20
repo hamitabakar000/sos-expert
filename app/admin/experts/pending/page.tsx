@@ -14,8 +14,8 @@ export default function PendingExpertsPage() {
             <p className="font-semibold text-accent">Controle qualite</p>
             <h1 className="font-display text-3xl font-bold text-primary">Validation des experts</h1>
             <p className="mt-2 max-w-3xl text-slate-600">
-              Un expert ne peut etre confirme qu'apres examen du profil, des pieces, des risques et d'une note de
-              decision admin. Les profils incomplets restent bloques.
+              Un expert ne peut etre confirme qu'apres examen de son CV, de son profil, des pieces, des risques et
+              d'une note de decision admin. Les profils incomplets restent bloques.
             </p>
           </div>
           <div className="rounded-lg border border-border bg-white px-4 py-3 text-sm shadow-card">

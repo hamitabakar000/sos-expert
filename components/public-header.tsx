@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { ArrowRight, LogIn, ShieldCheck } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
 import { ThemeControls } from "@/components/theme-controls";
 
 export function PublicHeader() {
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
-        <Link href="/" className="flex items-center gap-2 font-display text-xl font-bold text-primary">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-white">SX</span>
-          SOS Expert
+        <Link href="/" className="focus-ring rounded-md" aria-label="Accueil SOS Expert">
+          <BrandLogo priority />
         </Link>
         <nav className="hidden items-center gap-1 lg:flex">
           <a href="/#concept" className="focus-ring rounded-full px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100">
