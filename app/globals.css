@@ -7,8 +7,10 @@
   --color-primary: 10 22 40;
   --color-primary-bg: 10 22 40;
   --color-accent: 37 99 235;
+  --color-accent-text: 37 99 235;
   --color-accent-light: 219 234 254;
   --color-success: 22 163 74;
+  --color-success-text: 22 163 74;
   --color-warning: 217 119 6;
   --color-error: 220 38 38;
   --color-surface: 255 255 255;
@@ -23,6 +25,7 @@ html[data-color-theme="emerald"] {
   --color-primary: 5 46 22;
   --color-primary-bg: 5 46 22;
   --color-accent: 5 150 105;
+  --color-accent-text: 5 150 105;
   --color-accent-light: 209 250 229;
   --app-bg: 240 253 244;
   --soft-bg: 236 253 245;
@@ -32,6 +35,7 @@ html[data-color-theme="violet"] {
   --color-primary: 46 16 101;
   --color-primary-bg: 46 16 101;
   --color-accent: 124 58 237;
+  --color-accent-text: 124 58 237;
   --color-accent-light: 237 233 254;
   --app-bg: 250 245 255;
   --soft-bg: 245 243 255;
@@ -41,6 +45,7 @@ html[data-color-theme="rose"] {
   --color-primary: 76 5 25;
   --color-primary-bg: 76 5 25;
   --color-accent: 225 29 72;
+  --color-accent-text: 225 29 72;
   --color-accent-light: 255 228 230;
   --app-bg: 255 241 242;
   --soft-bg: 255 228 230;
@@ -49,7 +54,8 @@ html[data-color-theme="rose"] {
 html[data-color-theme="amber"] {
   --color-primary: 69 26 3;
   --color-primary-bg: 69 26 3;
-  --color-accent: 202 138 4;
+  --color-accent: 180 83 9;
+  --color-accent-text: 180 83 9;
   --color-accent-light: 254 243 199;
   --app-bg: 255 251 235;
   --soft-bg: 254 243 199;
@@ -59,7 +65,11 @@ html[data-mode="dark"] {
   color-scheme: dark;
   --color-primary: 226 232 240;
   --color-primary-bg: 15 23 42;
+  --color-accent: 37 99 235;
+  --color-accent-text: 96 165 250;
   --color-accent-light: 30 41 59;
+  --color-success: 21 128 61;
+  --color-success-text: 74 222 128;
   --color-surface: 15 23 42;
   --color-muted: 148 163 184;
   --color-border: 51 65 85;
@@ -69,22 +79,26 @@ html[data-mode="dark"] {
 }
 
 html[data-mode="dark"][data-color-theme="emerald"] {
-  --color-accent: 16 185 129;
+  --color-accent: 4 120 87;
+  --color-accent-text: 52 211 153;
   --color-accent-light: 6 78 59;
 }
 
 html[data-mode="dark"][data-color-theme="violet"] {
-  --color-accent: 167 139 250;
+  --color-accent: 124 58 237;
+  --color-accent-text: 196 181 253;
   --color-accent-light: 76 29 149;
 }
 
 html[data-mode="dark"][data-color-theme="rose"] {
-  --color-accent: 251 113 133;
+  --color-accent: 190 18 60;
+  --color-accent-text: 251 113 133;
   --color-accent-light: 136 19 55;
 }
 
 html[data-mode="dark"][data-color-theme="amber"] {
-  --color-accent: 251 191 36;
+  --color-accent: 180 83 9;
+  --color-accent-text: 251 191 36;
   --color-accent-light: 113 63 18;
 }
 
@@ -147,6 +161,14 @@ html[data-mode="dark"] .text-muted {
 
 html[data-mode="dark"] .text-primary {
   color: rgb(var(--color-primary)) !important;
+}
+
+html[data-mode="dark"] .text-accent {
+  color: rgb(var(--color-accent-text)) !important;
+}
+
+html[data-mode="dark"] .text-success {
+  color: rgb(var(--color-success-text)) !important;
 }
 
 html[data-mode="dark"] .shadow-card,

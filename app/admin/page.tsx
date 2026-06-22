@@ -24,8 +24,9 @@ export default function AdminPage() {
           <StatCard label="Revenu plateforme" value="12 750 MAD" detail="Commission 15%" icon={WalletCards} />
         </section>
 
-        <section className="mt-8 grid gap-3 md:grid-cols-5">
+        <section className="mt-8 grid gap-3 md:grid-cols-3 lg:grid-cols-6">
           {[
+            ["/admin/missions", "Missions reçues"],
             ["/admin/experts/pending", "Validation experts"],
             ["/admin/users", "Utilisateurs"],
             ["/admin/consultations", "Consultations"],

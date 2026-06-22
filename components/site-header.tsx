@@ -1,9 +1,10 @@
 import Link from "next/link";
 import {
-  Bell,
   BrainCircuit,
+  BellRing,
   BriefcaseBusiness,
   CircleDollarSign,
+  ClipboardList,
   LayoutDashboard,
   LogIn,
   LogOut,
@@ -15,9 +16,11 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { signOut } from "@/app/auth/actions";
 import { BrandLogo } from "@/components/brand-logo";
+import { NotificationBell } from "@/components/notification-bell";
 import { ProfilePhoto } from "@/components/profile-photo";
 import { ThemeControls } from "@/components/theme-controls";
 import { getCurrentUser } from "@/lib/auth";
+import { notifications } from "@/lib/demo-data";
 import type { UserRole } from "@/lib/types";
 
 const roleNavItems: Record<UserRole, { href: string; label: string; icon: LucideIcon }[]> = {
@@ -25,8 +28,7 @@ const roleNavItems: Record<UserRole, { href: string; label: string; icon: Lucide
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/missions/new", label: "Nouvelle mission", icon: BrainCircuit },
     { href: "/experts", label: "Experts", icon: Search },
-    { href: "/network", label: "Reseau", icon: UsersRound },
-    { href: "/notifications", label: "Notifications", icon: Bell }
+    { href: "/network", label: "Reseau", icon: UsersRound }
   ],
   expert: [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -37,9 +39,10 @@ const roleNavItems: Record<UserRole, { href: string; label: string; icon: Lucide
   ],
   admin: [
     { href: "/admin", label: "Admin", icon: ShieldCheck },
+    { href: "/admin/missions", label: "Missions", icon: ClipboardList },
     { href: "/admin/experts/pending", label: "Validation", icon: BriefcaseBusiness },
     { href: "/admin/users", label: "Utilisateurs", icon: Search },
-    { href: "/network", label: "Reseau", icon: UsersRound },
+    { href: "/admin/notifications", label: "Diffusion", icon: BellRing },
     { href: "/admin/analytics", label: "Analytics", icon: LayoutDashboard }
   ]
 };
@@ -68,6 +71,10 @@ export function SiteHeader() {
         </nav>
         <div className="flex items-center gap-2">
           <ThemeControls />
+          <NotificationBell
+            notifications={notifications.filter((notification) => notification.userId === user.id)}
+            userId={user.id}
+          />
           <Link
             href={user.role === "expert" ? "/settings/expert-profile" : "/settings/profile"}
             className="hidden items-center gap-2 rounded-full border border-border px-3 py-2 text-sm font-semibold text-primary sm:flex"
