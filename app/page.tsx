@@ -1,13 +1,17 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
+  BadgeCheck,
   BrainCircuit,
-  CheckCircle2,
   Clock3,
   GitBranch,
   LockKeyhole,
+  Search,
   ShieldCheck,
   Sparkles,
+  Star,
+  UsersRound,
   Video
 } from "lucide-react";
 import { ProfilePhoto } from "@/components/profile-photo";
@@ -37,93 +41,112 @@ export default function HomePage() {
     <>
       <PublicHeader />
       <main>
-        <section className="bg-primary text-white">
-          <div className="mx-auto grid min-h-[620px] max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr]">
-            <div>
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-blue-100">
-                <Sparkles className="h-4 w-4" />
-                IA neuro-symbolique + crowdsourcing structure
+        <section className="relative isolate overflow-hidden bg-[#07162f] text-white">
+          <Image
+            src="/images/sos-expert-hero-team.png"
+            alt="Une équipe de consultants SOS Expert"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[68%_center]"
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,17,39,0.99)_0%,rgba(5,17,39,0.94)_32%,rgba(5,17,39,0.56)_57%,rgba(5,17,39,0.08)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(37,99,235,0.22),transparent_34%)]" />
+
+          <div className="relative mx-auto flex min-h-[680px] max-w-7xl items-center px-4 py-20 sm:px-6 lg:py-24">
+            <div className="max-w-2xl">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-blue-100 backdrop-blur">
+                <Sparkles className="h-4 w-4 text-sky-300" />
+                L’expertise vérifiée, guidée par l’IA
               </span>
-              <h1 className="mt-6 max-w-3xl font-display text-4xl font-bold tracking-tight sm:text-6xl">
-                Trouvez l'expert qu'il vous faut, en quelques secondes.
+              <h1 className="mt-7 font-display text-4xl font-bold leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">
+                Le bon expert.
+                <span className="block text-sky-400">Au bon moment.</span>
               </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-200">
-                SOS Expert vous aide a trouver la bonne personne sans tourner en rond : un expert verifie, une
-                recommandation expliquee, et un vrai parcours pour discuter, decider et avancer.
+              <p className="mt-6 max-w-xl text-lg leading-8 text-slate-200 sm:text-xl">
+                Décrivez votre besoin et recevez une sélection claire d’experts qualifiés, disponibles et adaptés à
+                votre situation.
               </p>
-              <div className="mt-7 flex flex-wrap items-center gap-3">
-                <div className="flex -space-x-3">
-                  {validatedExperts.slice(0, 5).map((expert) => (
-                    <ProfilePhoto
-                      key={expert.id}
-                      src={expert.avatarUrl}
-                      alt={`${expert.firstName} ${expert.lastName}`}
-                      initials={`${expert.firstName[0]}${expert.lastName[0]}`}
-                      size="sm"
-                    />
-                  ))}
-                </div>
-                <p className="text-sm text-blue-100">Des experts disponibles, visibles et verifies pour la demo PFE.</p>
-              </div>
-              <div className="mt-8 flex flex-wrap gap-3">
+
+              <div className="mt-8 flex max-w-xl items-center rounded-2xl border border-white/15 bg-white p-2 shadow-2xl shadow-blue-950/40">
+                <Search className="ml-3 h-5 w-5 shrink-0 text-slate-400" />
+                <p className="min-w-0 flex-1 px-3 text-sm text-slate-500 sm:text-base">
+                  Ex. audit juridique, stratégie, cybersécurité…
+                </p>
                 <Link
                   href="/auth/register?role=client"
-                  className="focus-ring inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-white hover:bg-blue-700"
+                  className="focus-ring inline-flex shrink-0 items-center gap-2 rounded-xl bg-accent px-4 py-3 text-sm font-bold text-white transition hover:bg-blue-700 sm:px-5"
                 >
-                  Creer mon compte
-                  <ArrowRight className="h-4 w-4" />
+                  Trouver un expert
+                  <ArrowRight className="hidden h-4 w-4 sm:block" />
                 </Link>
-                <Link
-                  href="/auth/login"
-                  className="focus-ring rounded-full border border-white/25 px-6 py-3 font-semibold text-white hover:bg-white/10"
-                >
-                  Se connecter
-                </Link>
+              </div>
+
+              <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-200">
+                <span className="inline-flex items-center gap-2">
+                  <BadgeCheck className="h-5 w-5 text-sky-400" />
+                  Profils contrôlés
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <ShieldCheck className="h-5 w-5 text-sky-400" />
+                  Échanges confidentiels
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <Clock3 className="h-5 w-5 text-sky-400" />
+                  Réponse rapide
+                </span>
               </div>
             </div>
 
-            <div className="rounded-lg border border-white/15 bg-white/10 p-5 shadow-2xl backdrop-blur">
-              <div className="rounded-lg bg-white p-5 text-primary">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-semibold text-accent">Mission complexe detectee</p>
-                    <h2 className="mt-1 font-display text-2xl font-bold">Audit securite plateforme</h2>
-                  </div>
-                  <span className="rounded-full bg-green-50 px-3 py-1 text-sm font-bold text-success">87%</span>
+            <div className="absolute bottom-8 right-6 hidden w-72 rounded-2xl border border-white/20 bg-white/95 p-4 text-primary shadow-2xl backdrop-blur lg:block">
+              <div className="flex items-center gap-3">
+                <ProfilePhoto
+                  src={validatedExperts[0]?.avatarUrl}
+                  alt="Experte recommandée"
+                  initials="NA"
+                  size="md"
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-bold">Expert recommandé</p>
+                  <p className="text-xs text-slate-500">Disponible aujourd’hui</p>
                 </div>
-                <div className="mt-6 grid gap-3">
-                  {["Lot 1 - Authentification", "Lot 2 - Conformite donnees", "Lot 3 - Priorisation"].map(
-                    (lot, index) => (
-                      <div key={lot} className="flex items-center gap-3 rounded-lg border border-border p-3">
-                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-light font-bold text-accent">
-                          {index + 1}
-                        </span>
-                        <span className="flex-1 text-sm font-semibold">{lot}</span>
-                        <CheckCircle2 className="h-5 w-5 text-success" />
-                      </div>
-                    )
-                  )}
-                </div>
-                <div className="mt-5 rounded-lg bg-slate-50 p-4">
-                  <p className="text-sm font-semibold text-primary">Ce que voit le client</p>
-                  <p className="mt-1 text-sm leading-6 text-slate-600">
-                    Qui travaille sur quoi, quand le livrable arrive, et pourquoi chaque expert a ete choisi.
-                  </p>
-                </div>
-                <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-lg bg-blue-50 p-3">
-                    <p className="text-xl font-bold text-primary">36</p>
-                    <p className="text-xs font-semibold text-slate-600">experts demo</p>
-                  </div>
-                  <div className="rounded-lg bg-emerald-50 p-3">
-                    <p className="text-xl font-bold text-primary">3</p>
-                    <p className="text-xs font-semibold text-slate-600">profils</p>
-                  </div>
-                  <div className="rounded-lg bg-amber-50 p-3">
-                    <p className="text-xl font-bold text-primary">IA</p>
-                    <p className="text-xs font-semibold text-slate-600">expliquee</p>
-                  </div>
-                </div>
+                <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-success">98%</span>
+              </div>
+              <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
+                <span className="flex items-center gap-1 font-semibold text-slate-600">
+                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                  4,9/5
+                </span>
+                <span className="flex items-center gap-1 font-semibold text-slate-600">
+                  <BadgeCheck className="h-4 w-4 text-accent" />
+                  Identité vérifiée
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-border bg-white">
+          <div className="mx-auto grid max-w-7xl gap-6 px-4 py-6 sm:grid-cols-3 sm:px-6">
+            <div className="flex items-center gap-4 sm:border-r sm:border-border">
+              <UsersRound className="h-9 w-9 text-accent" />
+              <div>
+                <p className="font-display text-2xl font-bold text-primary">{validatedExperts.length}+</p>
+                <p className="text-sm text-slate-500">experts multidisciplinaires</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 sm:border-r sm:border-border">
+              <BadgeCheck className="h-9 w-9 text-accent" />
+              <div>
+                <p className="font-display text-2xl font-bold text-primary">100%</p>
+                <p className="text-sm text-slate-500">profils vérifiés</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <Clock3 className="h-9 w-9 text-accent" />
+              <div>
+                <p className="font-display text-2xl font-bold text-primary">&lt; 10 min</p>
+                <p className="text-sm text-slate-500">pour recevoir une recommandation</p>
               </div>
             </div>
           </div>
