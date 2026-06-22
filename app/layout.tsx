@@ -17,6 +17,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" data-color-theme="blue" data-mode="light" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var c=localStorage.getItem("sos_color_theme")||"blue";var m=localStorage.getItem("sos_theme_mode")||"light";document.documentElement.dataset.colorTheme=c;document.documentElement.dataset.mode=m;}catch(e){}})();`
+          }}
+        />
+      </head>
       <body className="font-sans antialiased">
         <ThemeInitializer />
         {children}

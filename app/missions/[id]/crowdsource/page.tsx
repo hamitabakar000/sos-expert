@@ -3,9 +3,19 @@ import { SiteHeader } from "@/components/site-header";
 import { experts, lots, missions } from "@/lib/demo-data";
 import { formatMad } from "@/lib/utils";
 
-export default function CrowdsourcePage() {
-  const mission = missions[0];
-  const deliveredLots = lots.filter((lot) => lot.status === "delivered" || lot.status === "validated").length;
+type CrowdsourcePageProps = {
+  params: {
+    id: string;
+  };
+};
+
+export default function CrowdsourcePage({ params }: CrowdsourcePageProps) {
+  const mission = missions.find((item) => item.id === params.id) ?? missions[0];
+  const missionLots = lots.filter((lot) => lot.missionId === mission.id);
+  const deliveredLots = missionLots.filter(
+    (lot) => lot.status === "delivered" || lot.status === "validated"
+  ).length;
+  const progress = missionLots.length ? (deliveredLots / missionLots.length) * 100 : 0;
 
   return (
     <>
@@ -30,13 +40,13 @@ export default function CrowdsourcePage() {
             <div>
               <h2 className="font-display text-xl font-bold text-primary">Progression des Lots</h2>
               <p className="mt-1 text-sm text-muted">
-                {deliveredLots}/{lots.length} Lots livres, consolidation IA en attente.
+                {deliveredLots}/{missionLots.length} Lots livres, consolidation IA en attente.
               </p>
             </div>
             <span className="rounded-full bg-orange-50 px-3 py-1 text-sm font-bold text-warning">En cours</span>
           </div>
           <div className="mt-5 h-3 overflow-hidden rounded-full bg-slate-100">
-            <div className="h-full rounded-full bg-accent" style={{ width: `${(deliveredLots / lots.length) * 100}%` }} />
+            <div className="h-full rounded-full bg-accent" style={{ width: `${progress}%` }} />
           </div>
 
           <div className="mt-6 overflow-hidden rounded-lg border border-border">
@@ -51,7 +61,7 @@ export default function CrowdsourcePage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {lots.map((lot) => {
+                {missionLots.map((lot) => {
                   const expert = experts.find((item) => item.id === lot.expertId);
                   return (
                     <tr key={lot.id}>

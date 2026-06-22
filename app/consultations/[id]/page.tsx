@@ -3,18 +3,44 @@ import { FileText, Mic, Paperclip, Send, Video } from "lucide-react";
 import { ProfilePhoto } from "@/components/profile-photo";
 import { SiteHeader } from "@/components/site-header";
 import { consultations, experts, missions } from "@/lib/demo-data";
+import type { Consultation } from "@/lib/types";
 import { formatMad } from "@/lib/utils";
 
 type ConsultationPageProps = {
   params: {
     id: string;
   };
+  searchParams?: {
+    expertId?: string;
+  };
 };
 
-export default function ConsultationPage({ params }: ConsultationPageProps) {
-  const consultation = consultations.find((item) => item.id === params.id) ?? consultations[0];
+export default function ConsultationPage({ params, searchParams }: ConsultationPageProps) {
+  const requestedExpert = params.id === "new"
+    ? experts.find((item) => item.id === searchParams?.expertId)
+    : undefined;
+  const consultation: Consultation = requestedExpert
+    ? {
+        id: "new",
+        missionId: "new",
+        clientId: "usr-client-001",
+        expertId: requestedExpert.id,
+        modality: "chat",
+        status: "pending",
+        durationMinutes: 0,
+        estimatedAmount: 0,
+        messages: [
+          {
+            id: `welcome-${requestedExpert.id}`,
+            sender: "expert",
+            body: `Bonjour, je suis ${requestedExpert.firstName}. Expliquez-moi votre besoin et je vous proposerai la meilleure facon d'avancer.`,
+            at: "Maintenant"
+          }
+        ]
+      }
+    : consultations.find((item) => item.id === params.id) ?? consultations[0];
   const mission = missions.find((item) => item.id === consultation.missionId) ?? missions[0];
-  const expert = experts.find((item) => item.id === consultation.expertId) ?? experts[0];
+  const expert = requestedExpert ?? experts.find((item) => item.id === consultation.expertId) ?? experts[0];
 
   return (
     <>
@@ -22,8 +48,14 @@ export default function ConsultationPage({ params }: ConsultationPageProps) {
       <main className="grid min-h-[calc(100vh-65px)] gap-0 lg:grid-cols-[320px_1fr_320px]">
         <aside className="border-r border-border bg-white p-5">
           <p className="font-semibold text-accent">Consultation {consultation.modality}</p>
-          <h1 className="mt-2 font-display text-2xl font-bold text-primary">{mission.title}</h1>
-          <p className="mt-3 text-sm leading-6 text-slate-600">{mission.description}</p>
+          <h1 className="mt-2 font-display text-2xl font-bold text-primary">
+            {requestedExpert ? `Nouvel echange avec ${expert.firstName}` : mission.title}
+          </h1>
+          <p className="mt-3 text-sm leading-6 text-slate-600">
+            {requestedExpert
+              ? `Decrivez votre besoin a ${expert.firstName} ${expert.lastName}, ${expert.title.toLowerCase()}.`
+              : mission.description}
+          </p>
           <div className="mt-6 space-y-3 rounded-lg bg-slate-50 p-4 text-sm">
             <div className="flex items-center gap-3">
               <ProfilePhoto
@@ -38,9 +70,15 @@ export default function ConsultationPage({ params }: ConsultationPageProps) {
             <p><strong>Duree:</strong> {consultation.durationMinutes} min</p>
             <p><strong>Montant estime:</strong> {formatMad(consultation.estimatedAmount)}</p>
           </div>
-          <Link href={`/consultations/${consultation.id}/payment`} className="mt-5 block rounded-full bg-accent px-4 py-3 text-center font-semibold text-white">
-            Terminer et payer
-          </Link>
+          {requestedExpert ? (
+            <p className="mt-5 rounded-lg bg-accent-light px-4 py-3 text-center text-sm font-semibold text-accent">
+              La facturation commencera apres acceptation de l'expert.
+            </p>
+          ) : (
+            <Link href={`/consultations/${consultation.id}/payment`} className="mt-5 block rounded-full bg-accent px-4 py-3 text-center font-semibold text-white">
+              Terminer et payer
+            </Link>
+          )}
         </aside>
 
         <section className="flex flex-col bg-slate-50">

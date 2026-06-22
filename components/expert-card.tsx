@@ -10,6 +10,8 @@ type ExpertCardProps = {
 };
 
 export function ExpertCard({ expert, recommendation }: ExpertCardProps) {
+  const exchangeHref = `/consultations/new?expertId=${expert.id}`;
+
   return (
     <article className="rounded-lg border border-border bg-white p-5 shadow-card">
       <div className="flex items-start gap-4">
@@ -88,7 +90,7 @@ export function ExpertCard({ expert, recommendation }: ExpertCardProps) {
         <Link href={`/experts/${expert.id}`} className="focus-ring flex-1 rounded-full bg-primary px-4 py-2 text-center text-sm font-semibold text-white hover:bg-slate-800">
           Voir son profil
         </Link>
-        <Link href="/consultations/con-002" className="focus-ring flex-1 rounded-full border border-border px-4 py-2 text-center text-sm font-semibold text-primary hover:bg-slate-50">
+        <Link href={exchangeHref} className="focus-ring flex-1 rounded-full border border-border px-4 py-2 text-center text-sm font-semibold text-primary hover:bg-slate-50">
           Demander un echange
         </Link>
       </div>

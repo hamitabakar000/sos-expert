@@ -23,7 +23,7 @@ export function SosAssistant() {
     {
       role: "assistant",
       content:
-        "Bonjour, je suis l'assistant SOS Expert. Je peux expliquer le projet, les roles, le matching IA, les missions, le paiement, l'admin et les choix de design."
+        "Bonjour, je suis l'assistant SOS Expert. Posez-moi une question sur la plateforme, un document ou un sujet general : je repondrai directement et je vous dirai clairement quand une information me manque."
     }
   ]);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -63,7 +63,7 @@ export function SosAssistant() {
       const data = (await response.json()) as {
         answer?: string;
         mode?: "llm" | "local";
-        intent?: "greeting" | "clarification" | "sos" | "off_topic";
+        intent?: "greeting" | "clarification" | "sos" | "general";
         sources?: { source: string; title: string }[];
       };
       const sourceText = data.sources?.length
@@ -139,15 +139,18 @@ export function SosAssistant() {
   return (
     <div className="fixed bottom-5 right-5 z-50">
       {open ? (
-        <section className="mb-4 flex max-h-[calc(100vh-7rem)] w-[min(92vw,390px)] flex-col overflow-hidden rounded-lg border border-border bg-white shadow-2xl">
-          <div className="flex items-center justify-between gap-3 bg-primary px-4 py-3 text-white">
+        <section className="assistant-panel mb-4 flex max-h-[calc(100vh-7rem)] w-[min(94vw,420px)] flex-col overflow-hidden rounded-[1.5rem] border border-border bg-white shadow-2xl">
+          <div className="assistant-header flex items-center justify-between gap-3 px-5 py-4 text-white">
             <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/15">
                 <Bot className="h-5 w-5" />
               </span>
               <div>
                 <p className="font-display font-bold">Assistant SOS Expert</p>
-                <p className="text-xs text-blue-100">IA + RAG local + pieces jointes</p>
+                <p className="mt-0.5 flex items-center gap-1.5 text-xs text-white/75">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
+                  IA generale + RAG projet
+                </p>
               </div>
             </div>
             <button
@@ -160,15 +163,15 @@ export function SosAssistant() {
             </button>
           </div>
 
-          <div className="flex-1 space-y-3 overflow-y-auto bg-slate-50 p-4">
+          <div className="assistant-messages flex-1 space-y-3 overflow-y-auto bg-slate-50 p-4">
             {messages.map((message, index) => (
               <article
                 key={`${message.role}-${index}`}
                 className={cn(
-                  "max-w-[92%] rounded-lg px-4 py-3 text-sm leading-6 shadow-card",
+                  "max-w-[92%] rounded-2xl px-4 py-3 text-sm leading-6 shadow-card",
                   message.role === "user"
-                    ? "ml-auto bg-accent text-white"
-                    : "mr-auto border border-border bg-white text-slate-700"
+                    ? "ml-auto rounded-br-md bg-accent text-white"
+                    : "mr-auto rounded-bl-md border border-border bg-white text-slate-700"
                 )}
               >
                 {formatMessage(message.content)}
@@ -182,7 +185,7 @@ export function SosAssistant() {
             ) : null}
           </div>
 
-          <div className="border-t border-border bg-white p-3">
+          <div className="assistant-composer border-t border-border bg-white p-3">
             {attachments.length ? (
               <div className="mb-3 flex flex-wrap gap-2">
                 {attachments.map((attachment) => (
@@ -240,7 +243,7 @@ export function SosAssistant() {
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
                 className="focus-ring min-w-0 flex-1 rounded-full border border-border px-4 py-3 text-sm"
-                placeholder="Posez une question sur SOS Expert..."
+                placeholder="Posez votre question..."
               />
               <button
                 type="submit"

@@ -1834,6 +1834,7 @@ export const missions: Mission[] = [
 export const lots: CrowdsourcingLot[] = [
   {
     id: "lot-001",
+    missionId: "mis-001",
     number: 1,
     title: "Audit applicatif et authentification",
     description: "Analyser les risques lies aux sessions, roles, JWT et acces aux donnees.",
@@ -1845,6 +1846,7 @@ export const lots: CrowdsourcingLot[] = [
   },
   {
     id: "lot-002",
+    missionId: "mis-001",
     number: 2,
     title: "Conformite donnees sensibles",
     description: "Identifier les exigences CNDP/RGPD pour fichiers, consultations et profils.",
@@ -1856,6 +1858,7 @@ export const lots: CrowdsourcingLot[] = [
   },
   {
     id: "lot-003",
+    missionId: "mis-001",
     number: 3,
     title: "Plan de priorisation et couts",
     description: "Consolider les correctifs selon impact, urgence, effort et budget.",
@@ -1867,6 +1870,7 @@ export const lots: CrowdsourcingLot[] = [
   },
   {
     id: "lot-004",
+    missionId: "mis-001",
     number: 4,
     title: "Synthese UX et parcours confiance",
     description: "Verifier que le parcours client explique les recommandations IA et les garanties.",
@@ -1877,6 +1881,7 @@ export const lots: CrowdsourcingLot[] = [
   },
   {
     id: "lot-005",
+    missionId: "mis-007",
     number: 1,
     title: "Architecture pedagogique du parcours",
     description: "Transformer les contenus bruts en modules, objectifs, prerequis et progression mesurable.",
@@ -1888,6 +1893,7 @@ export const lots: CrowdsourcingLot[] = [
   },
   {
     id: "lot-006",
+    missionId: "mis-007",
     number: 2,
     title: "Plateforme et automatisation e-learning",
     description: "Comparer les outils, definir le tunnel d'inscription et automatiser les relances apprenants.",
@@ -1898,6 +1904,7 @@ export const lots: CrowdsourcingLot[] = [
   },
   {
     id: "lot-007",
+    missionId: "mis-011",
     number: 1,
     title: "Prototype IA de tri des tickets",
     description: "Proposer un flux simple pour classifier les demandes clients et suggerer la prochaine action.",
@@ -1909,6 +1916,7 @@ export const lots: CrowdsourcingLot[] = [
   },
   {
     id: "lot-008",
+    missionId: "mis-011",
     number: 2,
     title: "Mesure ROI et adoption equipe",
     description: "Definir les indicateurs, le plan de test et les garde-fous pour que l'equipe utilise vraiment l'outil.",
