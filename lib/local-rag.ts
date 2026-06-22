@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { demoUsers, experts } from "@/lib/demo-data";
 import { sosKnowledgeSections, type AssistantAttachment } from "@/lib/sos-knowledge";
 
 type RagChunk = {
@@ -12,7 +13,7 @@ type ScoredChunk = RagChunk & {
   score: number;
 };
 
-export type AssistantIntent = "greeting" | "clarification" | "sos" | "off_topic";
+export type AssistantIntent = "greeting" | "clarification" | "sos" | "general";
 
 const workspaceRoot = process.cwd();
 const MAX_ATTACHMENT_CHARS = 12000;
@@ -37,8 +38,22 @@ const greetingWords = new Set([
   "cc",
   "coucou",
   "salam",
-  "slt"
+  "slt",
+  "sava",
+  "cv"
 ]);
+
+const smallTalkPatterns = [
+  "ca va",
+  "sava",
+  "comment vas tu",
+  "comment allez vous",
+  "quoi de neuf",
+  "merci",
+  "thanks",
+  "qui es tu",
+  "ton nom"
+];
 
 const clarificationPatterns = [
   "comment ca marche",
@@ -109,7 +124,7 @@ export function classifyAssistantRequest(question: string, attachments: Assistan
   const words = extractWords(normalizedQuestion);
   const isShortGreeting = tokens.length > 0 && tokens.length <= 3 && tokens.every((word) => greetingWords.has(word));
 
-  if (isShortGreeting) {
+  if (isShortGreeting || smallTalkPatterns.some((pattern) => normalizedQuestion.includes(normalize(pattern)))) {
     return "greeting";
   }
 
@@ -121,7 +136,7 @@ export function classifyAssistantRequest(question: string, attachments: Assistan
     return "clarification";
   }
 
-  return "off_topic";
+  return "general";
 }
 
 export function retrieveLocalContext(question: string, attachments: AssistantAttachment[] = []) {
@@ -163,15 +178,15 @@ export function buildLocalRagAnswer(question: string, attachments: AssistantAtta
   const intent = classifyAssistantRequest(question, attachments);
 
   if (intent === "greeting") {
-    return "Salut ! Je suis l'assistant SOS Expert. Je peux t'aider sur le fonctionnement du projet, les roles client/expert/admin, le matching IA, la validation des experts, les missions, le paiement ou le RAG local.";
+    return buildSmallTalkAnswer(question);
   }
 
   if (intent === "clarification") {
     return "Je peux t'aider, mais precise un peu le sujet SOS Expert : tu veux parler du parcours client, du profil expert, de l'admin, du matching IA, du paiement, du crowdsourcing ou du chatbot RAG ?";
   }
 
-  if (intent === "off_topic") {
-    return "Je suis reserve au projet SOS Expert. Je peux repondre sur la plateforme, ses profils, son matching IA, son administration, ses missions, ses paiements, son design et son chatbot RAG.";
+  if (intent === "general") {
+    return buildGeneralLocalAnswer(question);
   }
 
   const { snippets, sources, hasMatches } = retrieveLocalContext(question, attachments);
@@ -194,6 +209,147 @@ export function buildLocalRagAnswer(question: string, attachments: AssistantAtta
   ]
     .filter(Boolean)
     .join("\n\n");
+}
+
+function buildSmallTalkAnswer(question: string) {
+  const normalizedQuestion = normalize(question);
+
+  if (/merci|thanks/.test(normalizedQuestion)) {
+    return "Avec plaisir ! Si tu veux, envoie-moi directement la prochaine question, même en une phrase courte.";
+  }
+
+  if (/qui es tu|ton nom/.test(normalizedQuestion)) {
+    return "Je suis l'assistant intelligent de SOS Expert. J'utilise la base locale du projet pour les questions sur la plateforme et un fournisseur LLM lorsqu'il est configuré pour les sujets généraux.";
+  }
+
+  if (/ca va|sava|comment vas tu|comment allez vous|quoi de neuf/.test(normalizedQuestion)) {
+    return "Ça va bien, merci ! Je suis prêt. Tu peux me demander quelque chose sur SOS Expert, un profil, une fonctionnalité, un document ou un sujet général.";
+  }
+
+  return "Bonjour ! Comment puis-je t'aider aujourd'hui ?";
+}
+
+function buildGeneralLocalAnswer(question: string) {
+  const normalizedQuestion = normalize(question);
+  const peopleQuestion = /^(qui|c est qui|connais tu|parle moi de)/.test(normalizedQuestion);
+
+  if (peopleQuestion) {
+    const matches = findPeople(question);
+
+    if (matches.length === 1) {
+      return describePerson(matches[0]);
+    }
+
+    if (matches.length > 1) {
+      return [
+        "J'ai trouvé plusieurs personnes proches de ce nom dans SOS Expert :",
+        ...matches.slice(0, 4).map((person) => `- ${person.name} — ${person.description}`),
+        "Précise le nom complet et je te donnerai le bon profil."
+      ].join("\n");
+    }
+
+    const requestedName = normalizedQuestion
+      .replace(/^(qui est|qui|c est qui|connais tu|parle moi de)\s+/, "")
+      .trim();
+    return `Je ne trouve pas de profil correspondant exactement à « ${requestedName || question} » dans les données SOS Expert. Il peut s'agir d'une faute dans le nom ou d'une personne externe. Donne-moi son nom complet, son métier ou son entreprise pour éviter d'inventer.`;
+  }
+
+  if (/quelle heure|date aujourd|quel jour/.test(normalizedQuestion)) {
+    return `Nous sommes le ${new Intl.DateTimeFormat("fr-FR", { dateStyle: "full", timeZone: "Africa/Casablanca" }).format(new Date())}.`;
+  }
+
+  return [
+    `J'ai bien compris la question : « ${question.trim()} ».`,
+    "Le moteur local n'a pas de connaissance fiable suffisante pour y répondre sans risquer d'inventer.",
+    "Ajoute un peu de contexte, ou configure OpenAI, Anthropic ou Ollama pour obtenir une réponse générale complète."
+  ].join(" ");
+}
+
+type PersonMatch = {
+  name: string;
+  description: string;
+  score: number;
+  expertId?: string;
+};
+
+function findPeople(question: string): PersonMatch[] {
+  const personQuery = normalize(question).replace(/^(qui est|qui|c est qui|connais tu|parle moi de)\s+/, "").trim();
+  const queryWords = extractWords(personQuery);
+  const people: PersonMatch[] = [
+    ...experts.map((expert) => ({
+      name: `${expert.firstName} ${expert.lastName}`,
+      description: `${expert.title}, ${expert.city}, ${expert.yearsExperience} ans d'expérience`,
+      expertId: expert.id,
+      score: 0
+    })),
+    ...demoUsers.map((user) => ({
+      name: `${user.firstName} ${user.lastName}`,
+      description: `${roleLabel(user.role)} SOS Expert à ${user.city}`,
+      score: 0
+    }))
+  ];
+
+  const exactMatches = people.filter((person) => normalize(person.name) === personQuery);
+  if (exactMatches.length) {
+    return exactMatches.slice(0, 1);
+  }
+
+  const ranked = people
+    .map((person) => {
+      const nameWords = extractWords(normalize(person.name));
+      const score = queryWords.reduce((total, queryWord) => {
+        const best = Math.max(...nameWords.map((nameWord) => wordSimilarity(queryWord, nameWord)), 0);
+        return total + best;
+      }, 0);
+      return { ...person, score };
+    })
+    .filter((person) => person.score >= Math.max(0.65, queryWords.length * 0.42))
+    .sort((a, b) => b.score - a.score)
+    .filter((person, index, all) => all.findIndex((item) => item.name === person.name) === index);
+  const bestScore = ranked[0]?.score ?? 0;
+
+  return ranked.filter((person) => person.score >= bestScore - 0.25).slice(0, 5);
+}
+
+function describePerson(person: PersonMatch) {
+  const expert = person.expertId ? experts.find((item) => item.id === person.expertId) : undefined;
+
+  if (!expert) {
+    return `${person.name} est ${person.description}.`;
+  }
+
+  return `${expert.firstName} ${expert.lastName} est ${expert.title.toLowerCase()} à ${expert.city}. Son profil couvre ${expert.domains.join(", ")}, avec ${expert.yearsExperience} ans d'expérience, une note de ${expert.averageRating}/5 et un tarif de ${expert.hourlyRate} MAD/h.`;
+}
+
+function wordSimilarity(left: string, right: string) {
+  if (left === right) return 1;
+  if (left.includes(right) || right.includes(left)) return 0.82;
+  const distance = levenshtein(left, right);
+  return 1 - distance / Math.max(left.length, right.length, 1);
+}
+
+function levenshtein(left: string, right: string) {
+  const row = Array.from({ length: right.length + 1 }, (_, index) => index);
+  for (let i = 1; i <= left.length; i += 1) {
+    let previous = row[0];
+    row[0] = i;
+    for (let j = 1; j <= right.length; j += 1) {
+      const current = row[j];
+      row[j] = Math.min(
+        row[j] + 1,
+        row[j - 1] + 1,
+        previous + (left[i - 1] === right[j - 1] ? 0 : 1)
+      );
+      previous = current;
+    }
+  }
+  return row[right.length];
+}
+
+function roleLabel(role: "client" | "expert" | "admin") {
+  if (role === "admin") return "administrateur";
+  if (role === "expert") return "expert";
+  return "client";
 }
 
 function buildProjectChunks() {

@@ -16,6 +16,7 @@ type ExpertProfilePageProps = {
 export default function ExpertProfilePage({ params }: ExpertProfilePageProps) {
   const expert = experts.find((item) => item.id === params.id) ?? experts[0];
   const expertReviews = reviews.filter((review) => review.expertId === expert.id);
+  const exchangeHref = `/consultations/new?expertId=${expert.id}`;
   const currentUser = getCurrentUser();
 
   return (
@@ -62,7 +63,7 @@ export default function ExpertProfilePage({ params }: ExpertProfilePageProps) {
             </div>
 
             <div className="mt-6 space-y-3">
-              <Link href="/consultations/con-002" className="block rounded-full bg-accent px-5 py-3 text-center font-semibold text-white">
+              <Link href={exchangeHref} className="block rounded-full bg-accent px-5 py-3 text-center font-semibold text-white">
                 Consulter maintenant
               </Link>
               <Link href="/missions/new" className="block rounded-full border border-border px-5 py-3 text-center font-semibold text-primary">

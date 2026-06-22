@@ -66,6 +66,7 @@ export type Recommendation = {
 
 export type CrowdsourcingLot = {
   id: string;
+  missionId: string;
   number: number;
   title: string;
   description: string;

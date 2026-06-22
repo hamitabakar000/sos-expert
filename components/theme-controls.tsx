@@ -52,7 +52,7 @@ export function ThemeControls() {
   }
 
   return (
-    <div className="relative flex items-center gap-1 rounded-full border border-border bg-white/80 p-1 shadow-card">
+    <div className="theme-controls relative flex items-center gap-1 rounded-full border border-border bg-white/80 p-1 shadow-card">
       <button
         type="button"
         onClick={() => setPaletteOpen((current) => !current)}

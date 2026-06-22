@@ -2,12 +2,15 @@ import Link from "next/link";
 import {
   ArrowRight,
   BrainCircuit,
-  CheckCircle2,
   Clock3,
   GitBranch,
   LockKeyhole,
+  MessageSquare,
+  Search,
   ShieldCheck,
   Sparkles,
+  TrendingUp,
+  UsersRound,
   Video
 } from "lucide-react";
 import { ProfilePhoto } from "@/components/profile-photo";
@@ -37,21 +40,40 @@ export default function HomePage() {
     <>
       <PublicHeader />
       <main>
-        <section className="bg-primary text-white">
-          <div className="mx-auto grid min-h-[620px] max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr]">
-            <div>
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-blue-100">
+        <section className="home-hero relative overflow-hidden text-white">
+          <div className="home-hero__glow home-hero__glow--one" />
+          <div className="home-hero__glow home-hero__glow--two" />
+          <div className="relative mx-auto grid min-h-[680px] max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.08fr_0.92fr]">
+            <div className="relative z-10">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-emerald-300 backdrop-blur">
                 <Sparkles className="h-4 w-4" />
-                IA neuro-symbolique + crowdsourcing structure
+                Nouveau : matching explicable et missions multi-experts
               </span>
-              <h1 className="mt-6 max-w-3xl font-display text-4xl font-bold tracking-tight sm:text-6xl">
-                Trouvez l'expert qu'il vous faut, en quelques secondes.
+              <h1 className="mt-7 max-w-4xl font-display text-5xl font-bold leading-[0.98] tracking-[-0.055em] sm:text-7xl">
+                Trouvez la bonne expertise.
+                <span className="mt-2 block text-accent">Avancez sans deviner.</span>
               </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-200">
-                SOS Expert vous aide a trouver la bonne personne sans tourner en rond : un expert verifie, une
-                recommandation expliquee, et un vrai parcours pour discuter, decider et avancer.
+              <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
+                Decrivez votre besoin avec vos mots. SOS Expert identifie les profils verifies, explique chaque
+                recommandation et organise la consultation ou l'equipe dont votre projet a besoin.
               </p>
-              <div className="mt-7 flex flex-wrap items-center gap-3">
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Link
+                  href="/experts"
+                  className="focus-ring inline-flex items-center gap-2 rounded-full bg-accent px-7 py-4 font-bold text-white shadow-[0_18px_50px_rgb(var(--color-accent)/0.28)] transition hover:-translate-y-0.5"
+                >
+                  <Search className="h-5 w-5" />
+                  Trouver un expert
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/auth/register?role=expert"
+                  className="focus-ring rounded-full border border-white/20 bg-white/5 px-7 py-4 font-bold text-white backdrop-blur transition hover:bg-white/10"
+                >
+                  Devenir expert
+                </Link>
+              </div>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
                 <div className="flex -space-x-3">
                   {validatedExperts.slice(0, 5).map((expert) => (
                     <ProfilePhoto
@@ -63,66 +85,43 @@ export default function HomePage() {
                     />
                   ))}
                 </div>
-                <p className="text-sm text-blue-100">Des experts disponibles, visibles et verifies pour la demo PFE.</p>
-              </div>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link
-                  href="/auth/register?role=client"
-                  className="focus-ring inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-white hover:bg-blue-700"
-                >
-                  Creer mon compte
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  href="/auth/login"
-                  className="focus-ring rounded-full border border-white/25 px-6 py-3 font-semibold text-white hover:bg-white/10"
-                >
-                  Se connecter
-                </Link>
+                <div>
+                  <p className="text-sm font-semibold text-white">Profils verifies et disponibles</p>
+                  <p className="mt-1 text-xs text-slate-400">Droit, cybersecurite, finance, sante et plus</p>
+                </div>
               </div>
             </div>
 
-            <div className="rounded-lg border border-white/15 bg-white/10 p-5 shadow-2xl backdrop-blur">
-              <div className="rounded-lg bg-white p-5 text-primary">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-semibold text-accent">Mission complexe detectee</p>
-                    <h2 className="mt-1 font-display text-2xl font-bold">Audit securite plateforme</h2>
+            <div className="relative z-10">
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { value: "500+", label: "Experts verifies", icon: UsersRound },
+                  { value: "10k+", label: "Echanges realises", icon: MessageSquare },
+                  { value: "98%", label: "Satisfaction client", icon: TrendingUp },
+                  { value: "< 24h", label: "Delai de reponse", icon: Clock3 }
+                ].map((stat) => (
+                  <article
+                    key={stat.label}
+                    className="rounded-[1.75rem] border border-white/10 bg-white/[0.06] p-6 backdrop-blur-md transition hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.09] sm:p-7"
+                  >
+                    <stat.icon className="h-5 w-5 text-accent" />
+                    <p className="mt-8 font-display text-4xl font-bold tracking-tight text-accent sm:text-5xl">{stat.value}</p>
+                    <p className="mt-2 text-sm font-medium text-slate-400 sm:text-base">{stat.label}</p>
+                  </article>
+                ))}
+              </div>
+              <div className="mt-4 rounded-[1.75rem] border border-white/10 bg-white/[0.06] p-5 backdrop-blur-md">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-accent/15 text-accent">
+                      <BrainCircuit className="h-5 w-5" />
+                    </span>
+                    <div>
+                      <p className="font-semibold text-white">Matching transparent</p>
+                      <p className="mt-1 text-sm text-slate-400">Chaque score vient avec ses raisons.</p>
+                    </div>
                   </div>
-                  <span className="rounded-full bg-green-50 px-3 py-1 text-sm font-bold text-success">87%</span>
-                </div>
-                <div className="mt-6 grid gap-3">
-                  {["Lot 1 - Authentification", "Lot 2 - Conformite donnees", "Lot 3 - Priorisation"].map(
-                    (lot, index) => (
-                      <div key={lot} className="flex items-center gap-3 rounded-lg border border-border p-3">
-                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-light font-bold text-accent">
-                          {index + 1}
-                        </span>
-                        <span className="flex-1 text-sm font-semibold">{lot}</span>
-                        <CheckCircle2 className="h-5 w-5 text-success" />
-                      </div>
-                    )
-                  )}
-                </div>
-                <div className="mt-5 rounded-lg bg-slate-50 p-4">
-                  <p className="text-sm font-semibold text-primary">Ce que voit le client</p>
-                  <p className="mt-1 text-sm leading-6 text-slate-600">
-                    Qui travaille sur quoi, quand le livrable arrive, et pourquoi chaque expert a ete choisi.
-                  </p>
-                </div>
-                <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-lg bg-blue-50 p-3">
-                    <p className="text-xl font-bold text-primary">36</p>
-                    <p className="text-xs font-semibold text-slate-600">experts demo</p>
-                  </div>
-                  <div className="rounded-lg bg-emerald-50 p-3">
-                    <p className="text-xl font-bold text-primary">3</p>
-                    <p className="text-xs font-semibold text-slate-600">profils</p>
-                  </div>
-                  <div className="rounded-lg bg-amber-50 p-3">
-                    <p className="text-xl font-bold text-primary">IA</p>
-                    <p className="text-xs font-semibold text-slate-600">expliquee</p>
-                  </div>
+                  <span className="rounded-full bg-emerald-400/10 px-3 py-1 text-sm font-bold text-emerald-300">87% match</span>
                 </div>
               </div>
             </div>
@@ -268,7 +267,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="bg-primary text-white">
+        <section className="home-cta text-white">
           <div className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-[1fr_0.8fr] lg:items-center">
             <div>
               <p className="font-semibold text-blue-100">Espace protege</p>

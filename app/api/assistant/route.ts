@@ -33,6 +33,12 @@ type AnthropicResponse = {
   };
 };
 
+type OllamaResponse = {
+  message?: {
+    content?: string;
+  };
+};
+
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as AssistantRequestBody | null;
   const message = body?.message?.trim();
@@ -50,7 +56,7 @@ export async function POST(request: Request) {
   const attachments = sanitizeAttachments(body?.attachments ?? []);
   const intent = classifyAssistantRequest(message, attachments);
 
-  if (intent !== "sos") {
+  if (intent === "greeting" || intent === "clarification") {
     return NextResponse.json({
       answer: buildLocalRagAnswer(message, attachments),
       mode: "local",
@@ -59,9 +65,13 @@ export async function POST(request: Request) {
     });
   }
 
-  const rag = retrieveLocalContext(message, attachments);
+  const rag = intent === "sos"
+    ? retrieveLocalContext(message, attachments)
+    : { context: "", sources: [], snippets: [], hasMatches: false };
   const llmAnswer =
-    (await askOpenAI(message, history, rag.context)) ?? (await askAnthropic(message, history, rag.context));
+    (await askOpenAI(message, history, rag.context, intent)) ??
+    (await askAnthropic(message, history, rag.context, intent)) ??
+    (await askOllama(message, history, rag.context, intent));
 
   if (llmAnswer) {
     return NextResponse.json({
@@ -80,7 +90,12 @@ export async function POST(request: Request) {
   });
 }
 
-async function askOpenAI(message: string, history: AssistantMessage[], ragContext: string) {
+async function askOpenAI(
+  message: string,
+  history: AssistantMessage[],
+  ragContext: string,
+  intent: "sos" | "general"
+) {
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey) {
@@ -105,7 +120,7 @@ async function askOpenAI(message: string, history: AssistantMessage[], ragContex
         messages: [
           {
             role: "system",
-            content: `${assistantSystemPrompt}\n\nContexte RAG local SOS Expert et pieces jointes:\n${ragContext}`
+            content: buildSystemPrompt(ragContext, intent)
           },
           ...recentHistory,
           {
@@ -130,7 +145,12 @@ async function askOpenAI(message: string, history: AssistantMessage[], ragContex
   }
 }
 
-async function askAnthropic(message: string, history: AssistantMessage[], ragContext: string) {
+async function askAnthropic(
+  message: string,
+  history: AssistantMessage[],
+  ragContext: string,
+  intent: "sos" | "general"
+) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
 
   if (!apiKey) {
@@ -154,7 +174,7 @@ async function askAnthropic(message: string, history: AssistantMessage[], ragCon
         model: process.env.ANTHROPIC_MODEL ?? "claude-3-5-sonnet-latest",
         max_tokens: 900,
         temperature: 0.35,
-        system: `${assistantSystemPrompt}\n\nContexte RAG local SOS Expert et pieces jointes:\n${ragContext}`,
+        system: buildSystemPrompt(ragContext, intent),
         messages: [
           ...recentHistory,
           {
@@ -177,6 +197,69 @@ async function askAnthropic(message: string, history: AssistantMessage[], ragCon
     console.warn("Anthropic assistant unavailable:", error);
     return null;
   }
+}
+
+async function askOllama(
+  message: string,
+  history: AssistantMessage[],
+  ragContext: string,
+  intent: "sos" | "general"
+) {
+  const model = process.env.OLLAMA_MODEL;
+
+  if (!model) {
+    return null;
+  }
+
+  const recentHistory = history.slice(-8).map((item) => ({
+    role: item.role,
+    content: item.content
+  }));
+
+  try {
+    const response = await fetch(`${process.env.OLLAMA_URL ?? "http://127.0.0.1:11434"}/api/chat`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model,
+        stream: false,
+        messages: [
+          {
+            role: "system",
+            content: buildSystemPrompt(ragContext, intent)
+          },
+          ...recentHistory,
+          {
+            role: "user",
+            content: message
+          }
+        ],
+        options: {
+          temperature: 0.35
+        }
+      }),
+      signal: AbortSignal.timeout(30000)
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = (await response.json()) as OllamaResponse;
+    return data.message?.content?.trim() || null;
+  } catch {
+    return null;
+  }
+}
+
+function buildSystemPrompt(ragContext: string, intent: "sos" | "general") {
+  if (intent === "general") {
+    return `${assistantSystemPrompt}\n\nLa question actuelle est generale. Ne force pas de lien avec SOS Expert.`;
+  }
+
+  return `${assistantSystemPrompt}\n\nContexte RAG local SOS Expert et pieces jointes:\n${ragContext}`;
 }
 
 function sanitizeAttachments(attachments: AssistantAttachment[]) {

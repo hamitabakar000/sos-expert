@@ -37,6 +37,7 @@ function ClientDashboard() {
   const clientMissions = missions.filter((mission) => mission.clientId === user.id);
   const clientNotifications = notifications.filter((notification) => notification.userId === user.id);
   const activeMission = clientMissions.find((mission) => mission.mode === "crowdsourcing") ?? clientMissions[0];
+  const activeMissionLots = lots.filter((lot) => lot.missionId === activeMission.id);
   const activeConsultations = consultations.filter(
     (consultation) => consultation.clientId === user.id && consultation.status !== "completed"
   );
@@ -78,13 +79,15 @@ function ClientDashboard() {
                 {activeMission.title} - plusieurs experts travaillent en parallele, chacun sur une partie claire.
               </p>
             </div>
-            <span className="rounded-full bg-accent-light px-3 py-1 text-sm font-bold text-accent">{lots.length} Lots</span>
+            <span className="rounded-full bg-accent-light px-3 py-1 text-sm font-bold text-accent">
+              {activeMissionLots.length} Lots
+            </span>
           </div>
           <div className="mt-6 h-3 overflow-hidden rounded-full bg-slate-100">
             <div className="h-full w-1/2 rounded-full bg-accent" />
           </div>
           <div className="mt-5 divide-y divide-border">
-            {lots.map((lot) => (
+            {activeMissionLots.map((lot) => (
               <Link key={lot.id} href={`/lots/${lot.id}`} className="flex items-center justify-between gap-4 py-4 hover:bg-slate-50">
                 <div>
                   <p className="font-semibold text-primary">
