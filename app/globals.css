@@ -136,6 +136,105 @@ body {
   transition: background-color 180ms ease, color 180ms ease;
 }
 
+.home-photo-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: #ffffff;
+  background-color: #07162f;
+  background-image:
+    linear-gradient(
+      90deg,
+      rgb(4 15 35 / 0.99) 0%,
+      rgb(4 15 35 / 0.95) 31%,
+      rgb(4 15 35 / 0.62) 56%,
+      rgb(4 15 35 / 0.08) 100%
+    ),
+    radial-gradient(circle at 18% 18%, rgb(var(--color-accent) / 0.24), transparent 35%),
+    url("/images/sos-expert-hero-team.png");
+  background-position: center, center, 67% center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.home-photo-hero__badge {
+  color: #dbeafe;
+  border: 1px solid rgb(255 255 255 / 0.16);
+  background: rgb(255 255 255 / 0.1);
+}
+
+.home-photo-hero__badge svg,
+.home-photo-hero__accent,
+.home-photo-hero__trust svg {
+  color: #38bdf8;
+}
+
+.home-photo-hero__title {
+  color: #ffffff;
+}
+
+.home-photo-hero__description,
+.home-photo-hero__trust {
+  color: #e2e8f0;
+}
+
+.home-photo-hero__search {
+  color: #0f172a;
+  border: 1px solid rgb(255 255 255 / 0.16);
+  background: #ffffff;
+  box-shadow: 0 25px 50px -12px rgb(2 6 23 / 0.48);
+}
+
+.home-photo-hero__search .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+.home-photo-hero__search .text-slate-500 {
+  color: #64748b !important;
+}
+
+.home-photo-hero__button {
+  color: #ffffff;
+  background: rgb(var(--color-accent));
+}
+
+.home-photo-hero__button:hover {
+  filter: brightness(0.9);
+  transform: translateY(-1px);
+}
+
+.home-photo-hero__expert-card {
+  color: #0f172a;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  background: rgb(255 255 255 / 0.95);
+}
+
+.home-photo-hero__expert-card .text-primary {
+  color: #0f172a !important;
+}
+
+.home-photo-hero__expert-card .text-slate-500,
+.home-photo-hero__expert-card .text-slate-600 {
+  color: #64748b !important;
+}
+
+.home-photo-hero__expert-card .bg-emerald-50 {
+  background-color: #ecfdf5 !important;
+}
+
+.home-photo-hero__expert-card .border-slate-100 {
+  border-color: #f1f5f9 !important;
+}
+
+@media (max-width: 767px) {
+  .home-photo-hero {
+    background-image:
+      linear-gradient(90deg, rgb(4 15 35 / 0.97), rgb(4 15 35 / 0.84)),
+      url("/images/sos-expert-hero-team.png");
+    background-position: center, 62% center;
+  }
+}
+
 .home-hero {
   color: rgb(var(--hero-text));
   background:
