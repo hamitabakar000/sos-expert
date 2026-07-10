@@ -2,6 +2,17 @@
 
 Plateforme PFE de mise en relation experts-clients avec IA neuro-symbolique, consultations temps reel et crowdsourcing structure.
 
+## Vidéo démonstrative
+
+Une vidéo démonstrative est disponible afin de présenter les principales fonctionnalités de la plateforme SOS Expert, les parcours utilisateurs et le fonctionnement général du projet.
+
+<div align="center">
+
+[![Voir la vidéo démonstrative](https://img.youtube.com/vi/cFgEta5hkV0/maxresdefault.jpg)](https://youtu.be/cFgEta5hkV0)
+
+</div>
+
+> Cliquez sur l’image pour regarder la vidéo démonstrative du projet.
 ## Stack cible
 
 - Next.js 14 App Router + TypeScript strict
